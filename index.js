@@ -25,6 +25,26 @@ const getInput = player => async () => {
   game.dispatch(move(turn, [row, col]))
 }
 
+const endGame = ()=>{
+   const {winner} = game.getState();
+   if(winner){
+     switch(winner){
+       case 'DRAW':
+        console.log('DRAW');
+        break;
+      default:
+        console.log(`${winner} wins!!!`)
+     }
+     process.exit(0)
+   }
+
+}
+const errorHandler = () =>{
+  const {error} = game.getState()
+  if(error){
+    console.log(error)
+  }
+}
 // Create the store
 const game = createStore(gameReducer)
 
@@ -34,7 +54,8 @@ const game = createStore(gameReducer)
 game.subscribe(printBoard)
 game.subscribe(getInput('X'))
 game.subscribe(getInput('O'))
-
+game.subscribe(endGame)
+game.subscribe(errorHandler)
 // We dispatch a dummy START action to call all our
 // subscribers the first time.
 game.dispatch({ type: 'START' })
